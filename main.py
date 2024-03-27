@@ -29,22 +29,28 @@ if uploaded_file is not None:
     st.set_option('deprecation.showPyplotGlobalUse', False)
     plt.hist(img_gray.flatten(), 256, [0, 256], color='r')
     plt.xlim([0, 256])
-    plt.title("Image Histogram")
+    plt.title("Gray Image Histogram")
     plt.legend(('CDF', 'Histogram'), loc='upper left')
+    st.pyplot()
 
     cdf_m = np.ma.masked_equal(cdf,0)
     cdf_m = (cdf_m - cdf_m.min())*255/(cdf_m.max()-cdf_m.min())
     cdf = np.ma.filled(cdf_m,0).astype('uint8')
 
     img2 = cdf[img_gray]
+    # Buat grafik histogram dan CDF
+    plt.figure(figsize=(10, 5))
+    plt.plot(cdf_normalized, color='b')
+    st.set_option('deprecation.showPyplotGlobalUse', False)
+    plt.hist(img_gray.flatten(), 256, [0, 256], color='r')
+    plt.xlim([0, 256])
+    plt.title("Histograms Equalization Image Histogram")
+    plt.legend(('CDF', 'Histogram'), loc='upper left')
 
     # Menampilkan gambar
-    st.pyplot()
     st.image(img2, caption="Histograms Equalization")
+    st.pyplot()
 
     clahe = cv.createCLAHE(clipLimit=2.0, tileGridSize=(8,8))
     cl1 = clahe.apply(img_gray)
     st.image(cl1, caption="CLAHE (Contrast Limited Adaptive Histogram Equalization)")
-
-# # Menjalankan web Streamlit
-# st.run()
